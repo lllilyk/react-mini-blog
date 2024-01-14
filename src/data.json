@@ -1,0 +1,164 @@
+[
+    {
+        "id": 1,
+        "title": "prisma(ORM)",
+        "content": "ORM : Object Relational Mapping으로 JavaScript의 객체를 DB의 table과 매핑시켜주는 것을 의미",
+        "comments": [
+            {
+                "id": 11,
+                "content": "schema.prisma : 코드 상으로 모델 생성 및 관계 설정을 하는 파일"
+            },
+            {
+                "id": 12,
+                "content": "draft migration file : 현재 작성된 schema.prisma를 기준으로 생성된 .sql"
+            },
+            {
+                "id": 13,
+                "content": "_prisma_migrations : prisma에서 migrate 기록을 확인하기 위해 DB에 저장한 table"
+            },
+            {
+                "id": 14,
+                "content": ".env : DATABASE_URL=`postgresql://<유저명>:<비밀번호>@localhost:5432/<db이름>`"
+            },
+            {
+                "id": 15,
+                "content": "오늘도 좋은 글 감사합니다!👍"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "migrate란?",
+        "content": "DB의 schema(table)를 변경할 수 있는 툴",
+        "comments": [
+            {
+                "id": 21,
+                "content": "1. npx prisma migrate dev --create-only : draft migration file만 생성"
+            },
+            {
+                "id": 22,
+                "content": "즉, /prisma/migrations/생성시간_이름/migration.sql 생성"
+            },
+            {
+                "id": 23,
+                "content": "2. npx prisma migrate deploy : DB에 적용 및 _prisma_migrations 업데이트"
+            },
+            {
+                "id": 24,
+                "content": "3. npx prisma generate : prisma client 생성(타입을 만들고 코드에 적용)"
+            },
+            {
+                "id": 25,
+                "content": "npx prisma migrate dev : 위 3가지 명령어를 순차적으로 실행(즉, .sql을 만들고 DB에 적용하고 코드에 적용"
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Prisma migrate",
+        "content": "sql을 작성하지 않고도 DB를 조작할 수 있고 DB 조작기록을 관리할 수 있음",
+        "comments": [
+            {
+                "id": 31,
+                "content": "Prisma migrate 동작원리"
+            },
+            {
+                "id": 32,
+                "content": "1. schema.prisma 생성(변경) : 수정 사항 발생"
+            },
+            {
+                "id": 33,
+                "content": "2. draft migration file 생성 : migration을 실제로 DB schema에 적용하는 것이 아니라 아직 초안만 작성하겠다"
+            },
+            {
+                "id": 34,
+                "content": "명령어는 prisma migrate dev --create-only `--preview-feature`"
+            },
+            {
+                "id": 35,
+                "content": "--preview-feature는 migration이름으로, 명령어 실행시 prisma/migrations/에 .sql 파일이 생성됨\n Prisma model만 작성해주었는데 Prisma가 알아서 sql파일을 만들어 준 것! 이 파일을 draft migration이라고 하며 실제 DB schema에 적용됨"
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "title": "이어서",
+        "content": "아직 2번 단계에서 만든 draft migration은 DB schema에 적용되기 전임",
+        "comments": [
+            {
+                "id": 41,
+                "content": "3. draft migration file을 DB schema에 적용"
+            },
+            {
+                "id": 42,
+                "content": "명령어는 npx prisma migrate deploy --preview-feature"
+            },
+            {
+                "id": 43,
+                "content": "이 명령어를 실행하면 draft migration이 모두 DB schema에 적용됨"
+            },
+            {
+                "id": 44,
+                "content": "그러면, 이미 적용된 migration을 적용되지 않게 하는 방법은?"
+            },
+            {
+                "id": 45,
+                "content": "_prisma_migrations 테이블에서 체크하면 됨(어떤 migration이 DB schema에 적용되었는지)\nprisma migrate는 어떤 migration이 DB에 적용되었는지 체크함\nprisma/migrations와 _prisma_migration이 동기화 되어 있어야 함"
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "title": "npx prisma migrate dev",
+        "content": "npx prisma migrate dev 명령어를 실행하면 아래의 과정이 한 번에 실행됨",
+        "comments": [
+            {
+                "id": 51,
+                "content": "1. schema.prisma 수정"
+            },
+            {
+                "id": 52,
+                "content": "2. migrate 명령어 실행"
+            },
+            {
+                "id": 53,
+                "content": "3. draft migration 생성"
+            },
+            {
+                "id": 54,
+                "content": "4. DB schema에 적용 + _prisma_migrations에 추가"
+            },
+            {
+                "id": 55,
+                "content": "5. generate artifacts"
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "title": "--create-only, deploy",
+        "content": "npx prisma migrate dev --create-only --preview-feature",
+        "comments": [
+            {
+                "id": 61,
+                "content": "1-3번까지 진행되며 draft migration만 생성하며, 실제 DB schema에는 적용되지 않음"
+            },
+            {
+                "id": 62,
+                "content": "npx prisma migrate deploy --preview-feature"
+            },
+            {
+                "id": 63,
+                "content": "4번 과정만 수행함\n draft migration을 실제 db schema에 적용하며 _prisma_migrations에 row가 생성됨"
+            },
+            {
+                "id": 64,
+                "content": "단, 여기서 변경된 구조로 @prisma/client가 업데이트되지 않으므로 추가적으로 prisma generate 명령어를 수행해주어야 함"
+            },
+            {
+                "id": 65,
+                "content": "다음은 column 변경, 추가, 삭제"
+            }
+        ]
+    }
+]
