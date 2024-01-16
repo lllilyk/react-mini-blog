@@ -52,11 +52,19 @@ function PostViewPage(props) {
     const navigate = useNavigate();
     const { postId } = useParams();
 
-    const post = data.find((item) => {
-        return item.id === postId;
-    });
+    const post = data.find((item) => item.id === postId);
 
     const [comment, setComment] = useState("");
+
+    if (!post) {
+        return (
+            <Wrapper>
+                <Container>
+                    <p>해당 포스트를 찾을 수 없습니다.</p>
+                </Container>
+            </Wrapper>
+        );
+    }
 
     return (
         <Wrapper>
